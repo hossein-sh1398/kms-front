@@ -4,11 +4,12 @@
             <div class="main-header-left ">
                 <div class="responsive-logo">
                     <a href="index.html"><img src="../assets/img/brand/logo.png" class="logo-1" alt="لوگو"></a>
-                    <a href="index.html"><img src="../assets/img/brand/logo-white.png" class="dark-logo-1" alt="لوگو"></a>
+                    <a href="index.html"><img src="../assets/img/brand/logo-white.png" class="dark-logo-1"
+                            alt="لوگو"></a>
                     <a href="index.html"><img src="../assets/img/brand/favicon.png" class="logo-2" alt="لوگو"></a>
                     <a href="index.html"><img src="../assets/img/brand/favicon.png" class="dark-logo-2" alt="لوگو"></a>
                 </div>
-                <div class="app-sidebar__toggle" data-bs-toggle="sidebar">
+                <div>
                     <a class="open-toggle" href="#"><i class="header-icon fe fe-align-left"></i></a>
                     <a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
                 </div>
@@ -110,7 +111,8 @@
                             </div>
                             <div class="main-message-list chat-scroll">
                                 <a href="#" class="p-3 d-flex border-bottom">
-                                    <div class="  drop-img  cover-image  " data-bs-image-src="../assets/img/faces/3.jpg">
+                                    <div class="  drop-img  cover-image  "
+                                        data-bs-image-src="../assets/img/faces/3.jpg">
                                         <span class="avatar-status bg-teal"></span>
                                     </div>
                                     <div class="wd-90p">
@@ -262,22 +264,22 @@
                             </svg></a>
                     </div>
                     <div class="dropdown main-profile-menu nav nav-item nav-link">
-                        <a class="profile-user d-flex" href="#"><img alt="" src="../assets/img/faces/6.jpg"></a>
+                        <a class="profile-user d-flex" href="#">
+                            <img :alt="userStore.getUser.firstName + ' ' + userStore.getUser.lastName"
+                                :src="'https://freelancework.ir/' + userStore.getUser.imagePath">
+                        </a>
                         <div class="dropdown-menu">
                             <div class="main-header-profile bg-primary p-3">
                                 <div class="d-flex wd-100p">
-                                    <div class="main-img-user"><img alt="" src="../assets/img/faces/6.jpg" class=""></div>
+                                    <div class="main-img-user"><img alt="" src="../assets/img/faces/6.jpg" class="">
+                                    </div>
                                     <div class="ms-3 my-auto">
-                                        <h6>پتی کروزر</h6><span>مدیریت</span>
+                                        <h6>{{ userStore.getUser.firstName + ' ' + userStore.getUser.lastName }}</h6>
                                     </div>
                                 </div>
                             </div>
-                            <a class="dropdown-item" href="#"><i class="bx bx-user-circle"></i>مشخصات</a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-cog"></i> ویرایش نمایه</a>
-                            <a class="dropdown-item" href="#"><i class="bx bxs-inbox"></i>صندوق ورودی</a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-envelope"></i>پیام ها</a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-slider-alt"></i> تنظیمات حساب</a>
-                            <a class="dropdown-item" href="signin.html"><i class="bx bx-log-out"></i> خروج از سیستم</a>
+                            <router-link :to="{name:'profile'}" class="dropdown-item"><i class="bx bx-user-circle"></i>مشخصات</router-link>
+                            <a class="dropdown-item" href="#" @click.prevent="signOut()"><i class="bx bx-log-out"></i> خروج از سیستم</a>
                         </div>
                     </div>
                     <div class="dropdown main-header-message right-toggle">
@@ -297,12 +299,42 @@
     </div>
 </template>
 <script setup>
+import { onMounted } from 'vue'
+import { useRouter } from "vue-router";
+const router = useRouter()
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
+onMounted(() => {
+    $('.close-toggle').addClass('d-none')
+    $('.open-toggle').on('click', e => {
+        $('.open-toggle').addClass('d-none')
+        $('.close-toggle').removeClass('d-none')
+        $('#app').addClass('sidenav-toggled')
+    })
+    $('.close-toggle').click(e => {
+        $('.open-toggle').removeClass('d-none')
+        $('.close-toggle').addClass('d-none')
+        $('#app').removeClass('sidenav-toggled')
+    })
+
+    $('.profile-user').click(event => {
+        event.stopPropagation();
+        $('.dropdown.main-profile-menu.nav.nav-item.nav-link').toggleClass('show')
+    })
+    $(window).click(function () {
+        $('.dropdown.main-profile-menu.nav.nav-item.nav-link').removeClass('show')
+    });
+})
+function signOut() {
+    localStorage.removeItem('user');
+    router.push({ name: 'login' })
+}
 </script>
 <style>
-    .active {
+    /* .active {
         color: green;
     }
     .mr-4 {
         margin-right: 10px;;
-    }
+    } */
 </style>

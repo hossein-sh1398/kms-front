@@ -32,7 +32,7 @@
                                             <h5 class="fw-semibold mb-4">لطفا برای ادامه وارد شوید.</h5>
                                             <form action="#">
                                                 <div class="form-group">
-                                                    <label>پست الکترونیک</label>
+                                                    <label>نام کاربری</label>
                                                     <input class="form-control" v-model.lazy="formData.userName"
                                                         placeholder="نام کاربری خود را وارد کنید" type="text">
                                                     <div style="font-size: 11px;"
@@ -47,13 +47,14 @@
                                                         v-if="Object.hasOwn(errors, 'password')" class="text-danger">{{
                                                         errors.password.shift() }}</div>
                                                 </div>
-                                                <button type="button" @click="doLogin($event)"
-                                                    class="btn btn-main-primary btn-block"
-                                                    href="index.html">ورود</button>
+                                                <div class="text-center" v-if="signInLoading">
+                                                    <span class="spinner-border spinner-border-sm"></span>
+                                                </div>
+                                                <button type=" button" v-else @click="doLogin($event)" class="btn btn-main-primary btn-block">ورود</button>
                                             </form>
                                             <div class="main-signin-footer mt-5">
                                                 <p><a href="forgot.html">رمز عبور را فراموش کرده اید؟</a></p>
-                                                <p>حساب کاربری ندارید؟<a href="signup.html"> ایجاد یک حساب کاربری </a>
+                                                <p>حساب کاربری ندارید؟<router-link :to="{name:'register'}"> ایجاد یک حساب کاربری </router-link>
                                                 </p>
                                             </div>
                                         </div>
@@ -72,48 +73,40 @@ import { reactive, ref, computed } from 'vue'
 import Auth from '../services/Auth'
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-// import { useUserStore } from '../store/user'
+import { useUserStore } from '../store/user'
 import { useHead } from '@vueuse/head'
 useHead({
     // Can be static or computed
     title: computed(() => 'صفحه ورود'),
 })
-// const userStore = useUserStore()
-// const router = useRouter()
-// const toast = useToast();
+const userStore = useUserStore()
+const router = useRouter()
+const toast = useToast();
+let signInLoading = ref(false)
 let formData = reactive({
-    userName: '',
-    password: '',
+    userName: '2669929826',
+    password: '1',
 })
 let errors = {}
 
 async function doLogin(e) {
-
-    // signInLoading.value = true;
+    signInLoading.value = true;
     errors = {}
     try {
         const response = await Auth.login(formData);
-        console.log(response)
-        // signInLoading.value = false
         if (response.data.result == 0 ) {
-            toast.success(response.data.message, {
-                timeout: 2000
-            });
-            // userStore.setUser(response.data.user);
-            // userStore.setToken(response.data.token);
-            // userStore.setExpiresAt(response.data.expires_at);
-            // router.push({ name: 'panel_index' })
+            userStore.setUser(response.data.data);
+            router.push({ name: 'dashboard' })
         } else if (response.data.result == 5) {
             toast.warning(response.data.message, {
-                timeout: 20000
+                timeout: 2000
             });
         } else  {
             toast.warning(response.data.message, {
-                timeout: 20000
+                timeout: 2000
             });
         }
     } catch (err) {
-        // signInLoading.value = false
         if (err.response.status == 422) {
             errors = err.response.data.errors
         } else {
@@ -121,6 +114,8 @@ async function doLogin(e) {
                 timeout: 2000
             });
         }
+    } finally {
+        signInLoading.value = false
     }
 }
-</script>../services/Auth
+</script>

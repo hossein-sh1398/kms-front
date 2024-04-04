@@ -1,5 +1,6 @@
 import axios from "axios";
-
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
 const api = axios.create({
     baseURL: 'https://freelancework.ir/',
     timeout: 5000,
@@ -9,6 +10,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(function(config) {
+    let token = userStore.getUser.token;
+
+    config.headers.Authorization = 'Bearer ' + token;
+
     return config;
 }, err => new Promise.reject(err));
 

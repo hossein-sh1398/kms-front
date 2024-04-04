@@ -1,11 +1,14 @@
 import api from '@/axios/api'
-class User {
+class Auth {
     async login(formData) {
         return await api.post(`api/Account/Login`, {
             userName: formData.userName,
             password: formData.password,
         });
     }
+    async register(formData) {
+        return await api.post(`api/Account/RequestRegister`, formData);
+    }
 }
 
-export default new User
+export default new Auth

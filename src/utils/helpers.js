@@ -1,11 +1,4 @@
 export const isAuth = () => {
-    const token = localStorage.getItem('token') || '';
-    const expiresAt = localStorage.getItem('expires_at') || '';
-    let currentDate = Math.floor(Date.now() / 1000);
-    return token && expiresAt && expiresAt > currentDate;
-}
-import { useCurrentRouteNameStore } from '../store/current-route'
-export const setRouteName = (name) => {
-    const currentRouteStore = useCurrentRouteNameStore()
-    currentRouteStore.setName(name)
+    const user = JSON.parse(localStorage.getItem('user')) || {};
+    return user && user.token && Math.floor(new Date('2025-2-2').getTime() / 1000) > Math.floor(Date.now() / 1000);
 }

@@ -1,194 +1,165 @@
 <template>
-    <section id="sign">
-        <div class="container">
-            <div class="d-flex justify-content-center align-items-center">
-                <div class="sign__wrapper">
-                    <div class="sign__header d-flex flex-column justify-content-between border-0 p-3">
-                        <div class="align-self-end">
-                            <span class="sign__header--sign-up">عضویت</span>
-                            <span class="sign__header--slash mx-1">/</span>
-                            <span class="sign__header--sign-in sign__header--active">ورود</span>
-                        </div>
-                        <img src="../assets/images/logo-white.svg" alt="" class="sign__header--logo" width= "169px" height="43px">
-                    </div>
-                    <div class="sign__up">
-                        <div class="d-flex mb-3">
-                            <div class="form__control">
-                                <label for="fname" class="form__control-label">نام*</label>
-                                <input type="text" v-model.lazy="name" class="form__control-input" placeholder="لطفا نام خود را وارد کنید">
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <div class="form__control">
-                                <label for="lname" class="form__control-label">نام خانوادگی*</label>
-                                <input type="text" v-model.lazy="registerData.family" class="form__control-input" placeholder="لطفا نام خانوادگی خود را وارد کنید">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sign__in mb-3">
-                        <div class="d-flex flex-column mb-2">
-                            <div class="d-flex">
-                                <div class="form__control">
-                                    <label for="telephone" class="form__control-label">شماره موبایل*</label>
-                                    <input type="tel" v-model.lazy="registerData.mobile" autocomplete="off" class="form__control-input" placeholder="۰۹xxxxxxxxx مثال">
-                                    
-                                </div>
-                                <button :disabled="showTimer" type="button" @click="getToken" class="sign__in--confirm-number">
-                                    <div v-if="tokenLoading" class="spinner-border  spinner-border-sm"></div>
-                                    <span v-else>تایید</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <div class="form__control">
-                                <label for="password" class="form__control-label form__control-password">کد تایید شماره موبایل*</label>
-                                <input type="password" v-model.lazy="registerData.token" class="form__control-input" autocomplete="off" placeholder="xxxxxx">
-                            </div>
-                            <p v-show="showTimer" class="sign--waitingtime ps-2"></p>
-                            <p v-show="resendCode" class="sign--waitingtime ps-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>زمان استفاده از کد به پایان رسید  </span>
-                                    <button @click.prevent="getToken()" class="resend-otp-code">ارسال مجدد کد تایید</button>
-                                </div>
-                            </p>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <div class="form__control">
-                                <label class="form__control-label" style="position:relative;top:0;right:0;">منو به خاطر بسپار</label>
-                                <input type="checkbox" v-model="registerData.remember_me">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center position-relative">
-                        <button type="submit" @click.prevent="doLogin($event)" class="sign-btn sign-in--btn sign-btn--active">
-                            <div class="spinner-border spinner-border-sm" v-if="signInLoading"></div>
-                            <span v-else>ورود</span>
-                        </button>
-                        <button type="submit" :disabled="registerLoading" @click.prevent="doRegister($event)" class="sign-btn sign-up--btn sign-btn--deactive">
-                            <div class=" spinner-border spinner-border-sm" v-if="registerLoading"></div>
-                            <span v-else>عضویت</span>
-                        </button>
-                    </div>
-                    <div v-if="Object.keys(errors).length > 0">
-                        <ul class="mt-5 alert alert-danger">
-                            <li style="font-size: 11px;" v-if="Object.hasOwn(errors, 'name')" class="text-danger">{{ errors.name.shift() }}</li>
-                            <li style="font-size: 11px;" v-if="Object.hasOwn(errors, 'family')" class="text-danger">{{ errors.family.shift() }}</li>
-                            <li style="font-size: 11px;" class="text-danger" v-if="Object.hasOwn(errors, 'mobile')">{{ errors.mobile.shift() }}</li>
-                            <li style="font-size: 11px;" class="text-danger" v-if="Object.hasOwn(errors, 'token')">{{ errors.token.shift() }}</li>
-                        </ul>
-                    </div>
+    <div class="row no-gutter">
+        <div class="col-md-6 col-lg-6 col-xl-7 d-none d-md-flex bg-primary-transparent">
+            <div class="row wd-100p mr-center text-center">
+                <div class="col-md-12 col-lg-12 col-xl-12 my-auto mr-center wd-100p">
+                    <img src="assets/img/media/login.png" class="my-auto ht-xl-80p wd-md-100p wd-xl-80p mr-center"
+                        alt="logo">
                 </div>
             </div>
         </div>
-    </section>
+        <div class="col-md-6 col-lg-6 col-xl-5 bg-white">
+            <div class="login d-flex align-items-center py-2">
+                <div class="container p-0">
+                    <div class="row">
+                        <div class="col-md-10 col-lg-10 col-xl-9 mr-center">
+                            <div class="card-sigin">
+                                <div class="card-sigin">
+                                    <div class="card-sigin d-flex mb-5">
+                                        <a href="index.html"><img src="assets/img/brand/favicon.png"
+                                                class="sign-favicon-a ht-40" alt="logo">
+                                            <img src="assets/img/brand/favicon-white.png" class="sign-favicon-b ht-40"
+                                                alt="logo">
+                                        </a>
+                                        <h1 class="main-logo1 ms-1 me-0 my-auto tx-28 ps-1">Va<span>le</span>x</h1>
+                                    </div>
+                                    <div class="card-sigin">
+                                        <div class="main-signup-header">
+                                            <h2>شروع کردن</h2>
+                                            <h5 class="fw-semibold mb-4">این رایگان است برای ثبت نام و فقط یک دقیقه طول
+                                                می کشد.</h5>
+                                            <form action="#">
+                                                <div class="form-group">
+                                                    <label>نام</label>
+                                                    <input class="form-control" v-model.lazy="formData.firstName"
+                                                        placeholder="نام خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'firstName')" class="text-danger">{{
+                                                        errors.firstName.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>نام خانوادگی</label>
+                                                    <input class="form-control" v-model.lazy="formData.lastName"
+                                                        placeholder="نام خانوادگی خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'lastName')" class="text-danger">{{
+                                                        errors.lastName.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>شماره موبایل</label>
+                                                    <input class="form-control" v-model.lazy="formData.phone"
+                                                        placeholder="شماره موبایل خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;" v-if="Object.hasOwn(errors, 'phone')"
+                                                        class="text-danger">{{ errors.phone.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>آدرس ایمیل</label>
+                                                    <input class="form-control" v-model.lazy="formData.email"
+                                                        placeholder="آدرس ایمیل خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;" v-if="Object.hasOwn(errors, 'email')"
+                                                        class="text-danger">{{ errors.email.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>کد ملی</label>
+                                                    <input class="form-control" v-model.lazy="formData.codeMeli"
+                                                        placeholder="کد ملی خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'codeMeli')" class="text-danger">{{
+                                                        errors.codeMeli.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>شماره پرسنلی</label>
+                                                    <input class="form-control" v-model.lazy="formData.personnelNumber"
+                                                        placeholder="شماره پرسنلی خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'personnelNumber')"
+                                                        class="text-danger">{{ errors.personnelNumber.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>شناسه نمودار</label>
+                                                    <input class="form-control" v-model.lazy="formData.chartId"
+                                                        placeholder="شناسه نمودار خود را وارد کنید" type="text">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'chartId')" class="text-danger">{{
+                                                        errors.chartId.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>کلمه عبور</label>
+                                                    <input class="form-control" v-model.lazy="formData.password"
+                                                        placeholder="رمز عبور خود را وارد کنید" type="password">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'password')" class="text-danger">{{
+                                                        errors.password.shift() }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>تکرار کلمه عبور</label>
+                                                    <input class="form-control" v-model.lazy="formData.confirmPassword"
+                                                        placeholder="تکرار رمز عبور خود را وارد کنید"
+                                                        type="confirmPassword">
+                                                    <div style="font-size: 11px;"
+                                                        v-if="Object.hasOwn(errors, 'confirmPassword')"
+                                                        class="text-danger">{{ errors.password.shift() }}</div>
+                                                </div>
+                                                <div class="text-center" v-if="loading">
+                                                    <span class="spinner-border spinner-border-sm"></span>
+                                                </div>
+                                                <button type="button" v-else @click="doRegister($event)"
+                                                    class="btn btn-main-primary btn-block">ثبت درخواست</button>
+                                            </form>
+                                            <div class="main-signin-footer mt-5">
+                                                <router-link :to="{name:'login'}">ورود</router-link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End -->
+                </div>
+            </div><!-- End -->
+        </div>
+    </div>
 </template>
 <script setup>
-import {reactive, ref, computed } from 'vue'
-import authApi from '@/axios/api-auth'
+import { reactive, ref, computed } from 'vue'
+import Auth from '../services/Auth'
 import { useToast } from "vue-toastification";
-import { useRouter } from "vue-router";
-import { useUserStore } from '../store/user'
 import { useHead } from '@vueuse/head'
 useHead({
     // Can be static or computed
-    title: computed(() => 'صفحه ورود و عضویت'),
+    title: computed(() => 'صفحه درخواست عضویت'),
 })
-const userStore = useUserStore()
-const router = useRouter()
 const toast = useToast();
-let signInLoading = ref(false)
-let registerLoading = ref(false)
-let tokenLoading = ref(false)
-let showTimer = ref(false)
-let resendCode = ref(false)
-let name = ref('')
-let registerData = reactive({
-    name: '',
-    family: '',
-    mobile: '',
-    token: '',
-    remember_me:true
+let loading = ref(false)
+let formData = reactive({
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    email: "",
+    codeMeli: "",
+    personnelNumber: "",
+    chartId: ""
 })
 let errors = {}
 
-async function doLogin(e) {
-    if ($(e.currentTarget).hasClass("sign-btn--deactive")) {
-        $(".sign__header--sign-in").addClass("sign__header--active");
-        $(".sign__header--sign-up").removeClass("sign__header--active");
-        $(".sign__up").removeClass("sign__up--active");
-        $(".sign-in--btn").removeClass("sign-btn--deactive");
-        $(".sign-in--btn").addClass("sign-btn--active");
-        $(".sign-up--btn").removeClass("sign-btn--active");
-        $(".sign-up--btn").addClass("sign-btn--deactive");
-    }
-    signInLoading.value = true;
-    errors = {}
-    try {
-        const response = await authApi.post(`login/with/token`, {
-            mobile: registerData.mobile,
-            token:registerData.token
-        });
-
-        signInLoading.value = false
-        if (response.data.status) {
-            toast.success(response.data.message, {
-                timeout: 2000
-            });
-            userStore.setUser(response.data.user);
-            userStore.setToken(response.data.token);
-            userStore.setExpiresAt(response.data.expires_at);
-            router.push({name:'panel_index'})
-        } else {
-            toast.warning(response.data.message, {
-                timeout: 2000
-            });
-        }
-    } catch (err) {
-        signInLoading.value = false
-        if (err.response.status == 422) {
-            errors = err.response.data.errors
-        } else {
-            toast.error(err.response.data.message, {
-                timeout: 2000
-            });
-        }
-    }
-}
 async function doRegister(e) {
-   if ($(e.currentTarget).hasClass("sign-btn--deactive")) {
-        $(".sign__header--sign-in").removeClass("sign__header--active");
-        $(".sign__header--sign-up").addClass("sign__header--active");
-        $(".sign__up").addClass("sign__up--active");
-        $(".sign-in--btn").removeClass("sign-btn--active");
-        $(".sign-in--btn").addClass("sign-btn--deactive");
-        $(".sign-up--btn").removeClass("sign-btn--deactive");
-        $(".sign-up--btn").addClass("sign-btn--active");
-    }
-    registerLoading.value = true;
+    loading.value = true;
     errors = {}
     try {
-        const response = await authApi.post(`register`, {
-            mobile: registerData.mobile,
-            token: registerData.token,
-            name: registerData.name,
-            family: registerData.family,
-        });
-
-        registerLoading.value = false
-        if (response.data.status) {
-            toast.success(response.data.message, {
+        const response = await Auth.register(formData);
+        if (response.data.result == 0) {
+        } else if (response.data.result == 5) {
+            toast.warning(response.data.message, {
                 timeout: 2000
             });
-            userStore.setUser(response.data.user);
-            userStore.setToken(response.data.token);
-            router.push({ name: 'panel_index' })
         } else {
             toast.warning(response.data.message, {
                 timeout: 2000
             });
         }
     } catch (err) {
-        registerLoading.value = false
         if (err.response.status == 422) {
             errors = err.response.data.errors
         } else {
@@ -196,6 +167,8 @@ async function doRegister(e) {
                 timeout: 2000
             });
         }
+    } finally {
+        loading.value = false
     }
 }
 </script>

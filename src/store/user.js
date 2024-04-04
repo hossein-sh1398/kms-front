@@ -5,33 +5,39 @@ export const useUserStore = defineStore('user', {
     state: () => {
         return {
             user: JSON.parse(localStorage.getItem('user')) || {
-                name: '',
-                family: '',
-                mobile: '',
+                userId: '',
+                firstName: '',
+                lastName: '',
+                userName: '',
+                phone: '',
+                confirmedPhone: '',
+                email: '',
+                confirmedEmail: '',
+                address: '',
+                codeMeli: '',
+                personNumber: '',
+                about: '',
+                positionName: '',
+                positionId: '',
+                imagePath: '',
+                gradeId: '',
+                gradeName: '',
+                chartId: '',
+                chartPersianTitleName: '',
+                organizationId: '',
+                organizationPersianTitleName: '',
+                token: '',
+                expires_at: ''
             },
-            token: localStorage.getItem('token') || '',
-            expires_at: localStorage.getItem('expires_at') || '',
-            q: ''
         }
     },
     getters: {
         getUser(state) {
             return state.user
         },
-        getToken(state) {
-            return state.token
-        },
-        getExpiresAt(state) {
-            return state.expires_at
-        },
-        getQ(state) {
-            return state.q
-        },
         isAuth(state) {
-            let token = state.token;
-            let expiresAt = state.expires_at;
-            let currentDate = Math.floor(Date.now() / 1000);
-            return token && expiresAt && expiresAt > currentDate;
+            // return state.user.token && state.user.expires_at && state.user.expires_at > Math.floor(Date.now() / 1000);
+            return state.user.token && Math.floor(new Date('2025-2-2').getTime() / 1000) > Math.floor(Date.now() / 1000);
         },
     },
     actions: {
@@ -39,17 +45,6 @@ export const useUserStore = defineStore('user', {
             this.user = user
             localStorage.setItem('user', JSON.stringify(user));
 
-        },
-        setToken(token) {
-            this.token = token
-            localStorage.setItem('token', token);
-        },
-        setExpiresAt(expires_at) {
-            this.expires_at = expires_at
-            localStorage.setItem('expires_at', expires_at);
-        },
-        setQ(q) {
-            this.q = q
         }
     }
 })
