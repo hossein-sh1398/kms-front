@@ -10,6 +10,9 @@ class User {
             }
         });
     }
+    async updatePassword(formData, userId) {
+        return await api.post(`api/User/ChangePasswordByUser?Id=${userId}`, formData);
+    }
 }
 
 export default new User

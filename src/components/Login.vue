@@ -85,7 +85,7 @@ const toast = useToast();
 let signInLoading = ref(false)
 let formData = reactive({
     userName: '2669929826',
-    password: '1',
+    password: '123',
 })
 let errors = {}
 
@@ -107,13 +107,14 @@ async function doLogin(e) {
             });
         }
     } catch (err) {
-        if (err.response.status == 422) {
-            errors = err.response.data.errors
-        } else {
-            toast.error(err.response.data.message, {
-                timeout: 2000
-            });
-        }
+        
+        // if (err.response.status == 400) {
+        //     errors = err.response.errors
+        // } else {
+        //     toast.error(err.response.data.message, {
+        //         timeout: 2000
+        //     });
+        // }
     } finally {
         signInLoading.value = false
     }

@@ -271,15 +271,18 @@
                         <div class="dropdown-menu">
                             <div class="main-header-profile bg-primary p-3">
                                 <div class="d-flex wd-100p">
-                                    <div class="main-img-user"><img alt="" src="../assets/img/faces/6.jpg" class="">
+                                    <div class="main-img-user"><img alt=""
+                                            :src="'https://freelancework.ir/' + userStore.getUser.imagePath" class="">
                                     </div>
                                     <div class="ms-3 my-auto">
                                         <h6>{{ userStore.getUser.firstName + ' ' + userStore.getUser.lastName }}</h6>
                                     </div>
                                 </div>
                             </div>
-                            <router-link :to="{name:'profile'}" class="dropdown-item"><i class="bx bx-user-circle"></i>مشخصات</router-link>
-                            <a class="dropdown-item" href="#" @click.prevent="signOut()"><i class="bx bx-log-out"></i> خروج از سیستم</a>
+                            <router-link :to="{name:'profile'}" class="dropdown-item"><i
+                                    class="bx bx-user-circle"></i>مشخصات</router-link>
+                            <a class="dropdown-item" href="#" @click.prevent="signOut()"><i class="bx bx-log-out"></i>
+                                خروج از سیستم</a>
                         </div>
                     </div>
                     <div class="dropdown main-header-message right-toggle">
