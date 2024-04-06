@@ -3,7 +3,7 @@ import { useUserStore } from '@/store/user'
 const userStore = useUserStore()
 const api = axios.create({
     baseURL: 'https://freelancework.ir/',
-    timeout: 5000,
+    timeout: 10000,
     headers: {
         'Accept': 'application/json'
     }
